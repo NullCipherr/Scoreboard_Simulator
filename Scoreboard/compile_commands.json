@@ -1,0 +1,40 @@
+[
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-g",
+      "-O3",
+      "-std=gnu17",
+      "-c",
+      "-Isrc/include",
+      "-o",
+      "obj/leitor.o",
+      "src/leitor.c"
+    ],
+    "directory": "/home/sampie/Faculdade/sim-scoreboard",
+    "file": "/home/sampie/Faculdade/sim-scoreboard/src/leitor.c",
+    "output": "/home/sampie/Faculdade/sim-scoreboard/obj/leitor.o"
+  },
+  {
+    "arguments": [
+      "/usr/bin/gcc",
+      "-Wall",
+      "-Wextra",
+      "-Wpedantic",
+      "-g",
+      "-O3",
+      "-std=gnu17",
+      "-c",
+      "-Isrc/include",
+      "-o",
+      "obj/main.o",
+      "src/main.c"
+    ],
+    "directory": "/home/sampie/Faculdade/sim-scoreboard",
+    "file": "/home/sampie/Faculdade/sim-scoreboard/src/main.c",
+    "output": "/home/sampie/Faculdade/sim-scoreboard/obj/main.o"
+  }
+]

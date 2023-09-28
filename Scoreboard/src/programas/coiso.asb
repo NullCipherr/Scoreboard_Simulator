@@ -1,0 +1,50 @@
+/*
+UF:
+  add: 5
+  mul: 5
+  inteiro: 5
+INST:
+  add: 2
+  addi: 2
+  sub: 2
+  subi: 2
+  mul: 10
+  div: 40
+  and: 1
+  or: 1
+  not: 1
+  blt: 2
+  bgt: 2
+  beq: 2
+  lw: 2
+  sw: 2
+*/
+
+.data
+  10
+  20
+  30
+  40
+  50
+
+.text
+# .globl _main
+
+# main:
+  add r1, r2, r3
+  addi r1, r2, 100
+  sub r1, r2, r3
+  subi r1, r2, 100
+  mul r1, r2, r3
+  div r1, r2, r3
+  and r1, r2, r3
+  or r1, r2, r3
+  not r1, r2
+  blt r1, r2, 100
+  bgt r1, r2, 100
+  beq r1, r2, 100
+  bne r1, r2, 100
+  lw r1, 100(r2)
+  sw r1, 100(r2)
+  j 100
+  exit
