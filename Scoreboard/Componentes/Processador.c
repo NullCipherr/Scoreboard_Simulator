@@ -5,6 +5,56 @@
 
 #define NUM_REGISTERS 32
 
+// ===================================================== MEMÓRIA =====================================================
+
+// Estrutura para representar a memória
+struct Memoria {
+  int dados[128] ; // Memória fictícia com 1024 palavras
+};
+
+// Declaração de uma variável de memória
+struct Memoria memoria ;
+
+void imprimir_memoria() 
+{
+    printf("Conteúdo da memória:\n");
+    for (int i = 0; i < 128; i++) 
+    {
+        printf("memoria[%d] = %d\n", i, memoria.dados[i]);
+    }
+}
+
+// Função para ler dados da memória
+int ler_memoria(int endereco) 
+{
+  if (endereco >= 0 && endereco < 1024) 
+  {
+    return memoria.dados[endereco]; // Corrigido para usar memoria.dados
+  } 
+  else 
+  {
+    // Tratar erro de acesso à memória fora dos limites
+    printf("Erro: Acesso à memória fora dos limites.\n");
+
+    return 0;
+  }
+}
+
+// Função para escrever dados na memória
+void escrever_memoria(int endereco, int dado) 
+{
+    if (endereco >= 0 && endereco < 1024) 
+    {
+        memoria.dados[endereco] = dado ; // Corrigido para usar memoria.dados
+    } 
+    else 
+    {
+        // Tratar erro de acesso à memória fora dos limites
+        printf("Erro: Acesso à memória fora dos limites.\n") ;
+    }
+}
+
+// =========================================================================================================================
 
 // ===================================================== REGISTRADORES =====================================================
 
@@ -17,52 +67,73 @@ typedef struct {
 // Banco de Registradores
 Registrador registradores[32] ;
 
-// Rótulos para os registradores
-const char *nomes_registradores[32] = {
-    "r0",  "r1",  "r2",  "r3",  "r4",  "r5",  "r6",  "r7",  "r8",  "r9",  "r10",
-    "r11", "r12", "r13", "r14", "r15", "r16", "r17", "r18", "r19", "r20", "r21",
-    "r22", "r23", "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31"};
-
-// Operações do processador
-enum OpCode {
-  ADD = 0x00,
-  ADDI = 0x01,
-  SUB = 0x02,
-  SUBI = 0x03,
-  MUL = 0x04,
-  DIV = 0x05,
-  AND = 0x06,
-  OR = 0x07,
-  NOT = 0x08,
-  BLT = 0x09,
-  BGT = 0x0A,
-  BEQ = 0x0B,
-  BNE = 0x0C,
-  JUMP = 0x0D,
-  LW = 0x0E,
-  SW = 0x0F,
-  EXIT = 0x10,
-} ;
-
-// Endereço do próximo comando a ser executado
-int pc = 0 ;
-
-// =========================================================================================================================
-
-// Estrutura para representar a memória
-struct Memoria {
-  int dados[1024] ; // Memória fictícia com 1024 palavras
-};
-
-// Declaração de uma variável de memória
-struct Memoria memoria ;
-
 // Estrutura para representar uma entrada no scoreboard
 typedef struct {
     Registrador reg ;
     bool busy ;
     int value ;
 } ScoreboardEntry ;
+
+// Rótulos para os registradores
+const char *nomes_registradores[32] = {
+    "r0",  "r1",  "r2",  "r3",  "r4",  "r5",  "r6",  "r7",  "r8",  "r9",  "r10",
+    "r11", "r12", "r13", "r14", "r15", "r16", "r17", "r18", "r19", "r20", "r21",
+    "r22", "r23", "r24", "r25", "r26", "r27", "r28", "r29", "r30", "r31"};
+
+typedef enum {
+    ADD,
+    ADDI,
+    SUB,
+    SUBI,
+    MUL,
+    DIV,
+    AND,
+    OR,
+    NOT,
+    BLT,
+    BGT,
+    BEQ,
+    BNE,
+    JUMP,
+    LW,
+    SW,
+    EXIT
+} Opcode;
+
+const char* opcodeNames[] = {
+    "ADD",
+    "ADDI",
+    "SUB",
+    "SUBI",
+    "MUL",
+    "DIV",
+    "AND",
+    "OR",
+    "NOT",
+    "BLT",
+    "BGT",
+    "BEQ",
+    "BNE",
+    "JUMP",
+    "LW",
+    "SW",
+    "EXIT"
+};
+
+const char* nomeOpcode(Opcode opcode) 
+{
+    if (opcode >= 0 && opcode < sizeof(opcodeNames) / sizeof(opcodeNames[0])) 
+    {
+        return opcodeNames[opcode];
+    }
+    
+    return "Desconhecido";
+}
+
+// Endereço do próximo comando a ser executado
+int pc = 0 ;
+
+// =========================================================================================================================
 
 // ===================================================== INSTRUÇÕES =====================================================
 
@@ -93,7 +164,7 @@ ScoreboardEntry scoreboard[NUM_REGISTERS] ;
 // Função para imprimir o estado da unidade funcional de adição
 void imprimir_Estado_Unidade_Funcional_ADD(Registrador r1, Registrador r2) 
 {
-    printf("==================== Unidade Funcional ADD =================== \n") ;
+    printf("\n\n==================== Unidade Funcional ADD =================== \n") ;
     printf("\nR1 --> %d", r1.valor) ;
     printf("\nR2 --> %d", r2.valor) ;
     
@@ -102,7 +173,7 @@ void imprimir_Estado_Unidade_Funcional_ADD(Registrador r1, Registrador r2)
 // Função para imprimir o estado da unidade funcional de subtração
 void imprimir_Estado_Unidade_Funcional_SUB(Registrador r1, Registrador r2) 
 {
-    printf("==================== Unidade Funcional SUB ==================== \n") ;
+    printf("\n\n==================== Unidade Funcional SUB ==================== \n") ;
     printf("\nR1 --> %d", r1.valor) ;
     printf("\nR2 --> %d", r2.valor) ;
     
@@ -111,7 +182,7 @@ void imprimir_Estado_Unidade_Funcional_SUB(Registrador r1, Registrador r2)
 // Função para imprimir o estado da unidade funcional de multiplicação
 void imprimir_Estado_Unidade_Funcional_MUL(Registrador r1, Registrador r2) 
 {
-    printf("===================== Unidade Funcional MUL ==================== \n") ;
+    printf("\n\n===================== Unidade Funcional MUL ==================== \n") ;
     printf("\nR1 --> %d", r1.valor) ;
     printf("\nR2 --> %d", r2.valor) ;
 }
@@ -119,7 +190,7 @@ void imprimir_Estado_Unidade_Funcional_MUL(Registrador r1, Registrador r2)
 // Função para imprimir o estado da unidade funcional de divisão
 void imprimir_Estado_Unidade_Funcional_DIV(Registrador r1, Registrador r2) 
 {
-    printf("==================== Unidade Funcional DIV ====================\n") ;
+    printf("\n\n==================== Unidade Funcional DIV ====================\n") ;
     printf("\nR1 --> %d", r1.valor) ;
     printf("\nR2 --> %d", r2.valor) ;    
 }
@@ -127,15 +198,15 @@ void imprimir_Estado_Unidade_Funcional_DIV(Registrador r1, Registrador r2)
 // Função para executar a operação de adição
 int unidade_Funcional_ADD(Registrador r1, Registrador r2) 
 {
-	    imprimir_Estado_Unidade_Funcional_ADD(r1, r2) ;
-    	return r1.valor + r2.valor ;
+	imprimir_Estado_Unidade_Funcional_ADD(r1, r2) ;
+    return r1.valor + r2.valor ;
 }
 
 // Função para executar a operaçãgistradores’ uno de subtração
 int unidade_Funcional_SUB(Registrador r1, Registrador r2) 
 {
-	    imprimir_Estado_Unidade_Funcional_SUB(r1, r2) ;
-    	return r1.valor - r2.valor ;
+	imprimir_Estado_Unidade_Funcional_SUB(r1, r2) ;
+    return r1.valor - r2.valor ;
 }
 
 // Função para executar a operação de multiplicação
@@ -148,16 +219,16 @@ int unidade_Funcional_MUL(Registrador r1, Registrador r2)
 // Função para executar a operação de divisão
 int unidade_Funcional_DIV(Registrador r1, Registrador r2) 
 {
-    	if (r2.valor != 0) 
-    	{
-		    imprimir_Estado_Unidade_Funcional_DIV(r1, r2) ;
-        	return r1.valor / r2.valor ;
-    	} 
-    	else 
-    	{
-        	// Lidar com divisão por zero, se necessário
-        	return 0 ;
-    	}
+    if (r2.valor != 0) 
+    {
+		imprimir_Estado_Unidade_Funcional_DIV(r1, r2) ;
+        return r1.valor / r2.valor ;
+    } 
+    else 
+    {
+        // Lidar com divisão por zero, se necessário
+        return 0 ;
+    }
 }
 
 // =========================================================================================================================
@@ -216,7 +287,7 @@ void executar_Emissao()
 // Função para executar o estágio de leitura dos operandos
 void executar_Leitura_Operandos() 
 {
-    printf("Iniciando o estágio de --> Leitura dos Operandos\n") ;
+    printf("Iniciando o estágio de --> Leitura dos Operandos \n") ;
 
     // Simulação do estágio de leitura dos operandos
     // Aqui você pode verificar se os operandos necessários estão disponíveis
@@ -248,16 +319,20 @@ void executar_Leitura_Operandos()
 
 
 // Função para executar o estágio de execução
-void executar_Execucao(char opcode, Registrador rs, Registrador rt, Registrador rd, Registrador immediate) 
+void executar_Execucao(Opcode opcode, Registrador rs, Registrador rt, Registrador rd, Registrador immediate) 
 {
-    printf("\nIniciando o estágio de --> Execucao\n") ;
-    printf("\nOpcode --> %c \n", opcode) ;
+    printf("\nIniciando o estágio de --> Execucao --> %s \n", nomeOpcode(opcode)) ;
 
-     opcode = pipeline[2].opcode ;
-     rs.valor = pipeline[2].rs ;
-     rt.valor = pipeline[2].rt ;
-     rd.valor = pipeline[2].rd ;
-     immediate.valor = pipeline[2].immediate ;
+    printf("\nRS --> %d ", rs.valor) ;
+    printf("\nRT --> %d", rt.valor) ;
+    printf("\nRD --> %d", rd.valor) ;
+    printf("\nIMMEDIATE --> %d", immediate.valor) ;
+
+    //opcode = pipeline[2].opcode ;
+    //rs.valor = pipeline[2].rs ;
+    //rt.valor = pipeline[2].rt ;
+    //rd.valor = pipeline[2].rd ;
+    //immediate.valor = pipeline[2].immediate ;
 
     // Bloco switch para lidar com diferentes opcodes
     switch (opcode) 
@@ -266,35 +341,43 @@ void executar_Execucao(char opcode, Registrador rs, Registrador rt, Registrador 
         case ADD :
             printf("\nExecução --> ADD") ;
             pipeline[2].rd = unidade_Funcional_ADD(rs, rt) ;
+            printf("\nSoma --> %d", pipeline[2].rd) ;
+            printf("\nEscrevendo na memória ... \n") ; 
+            escrever_memoria(0, pipeline[2].rd) ; 
             break ;
         
         // Operação de adição imediata.
         case ADDI :
             printf("\nExecução --> ADDI") ;
             pipeline[2].rt = unidade_Funcional_ADD(rs, immediate) ;
+            printf("\nSoma Imediata --> %d", pipeline[2].rt) ;
             break ;
  	
  	    // Operação de subtração
         case SUB:
             printf("\nExecução --> SUB") ;
 	        pipeline[2].rd = unidade_Funcional_SUB(rs, rt) ;
+            printf("\nSubtração --> %d", pipeline[2].rd) ;
             break ;
             
         case SUBI:
             printf("\nExecução --> SUBI") ;
 	        pipeline[2].rt = unidade_Funcional_SUB(rs, immediate) ;
+            printf("\nSubtração Imediata --> %d", pipeline[2].rt) ;
             break ;
 	
 	    // Operação de multiplicação
         case MUL:
             printf("\nExecução --> MUL") ;
             pipeline[2].rd = unidade_Funcional_MUL(rs, rt) ;
+            printf("\nMultiplicação --> %d", pipeline[2].rd) ;
             break ;
 	
 	    // Operação de divisão
         case DIV:
             printf("\nExecução --> DIV") ;
             pipeline[2].rd = unidade_Funcional_DIV(rs, rt) ;
+            printf("\nDivisão --> %d", pipeline[2].rd) ;
             break ;
        
         //
@@ -313,12 +396,14 @@ void executar_Execucao(char opcode, Registrador rs, Registrador rt, Registrador 
     		
     	// 	
   	    case NOT:
+            printf("\nExecução --> NOT") ;
     		rd.valor = ~rs.valor ;
     		//printf("NOT %s, %s\n", nome_rd, nome_rs) ;
     		break;
     		
     	// 	
   	    case BLT:
+            printf("\nExecução --> BLT") ;
     		if (rs.valor < rt.valor) 
     		{
       			//pc = &immediate ; // Salta para o endereço imediato
@@ -328,6 +413,7 @@ void executar_Execucao(char opcode, Registrador rs, Registrador rt, Registrador 
     		
     	// 	
   	    case BGT:
+            printf("\nExecução --> BGT") ;
     		if (rs.valor > rt.valor) 
     		{
       			//pc = &immediate ; // Salta para o endereço imediato
@@ -337,6 +423,7 @@ void executar_Execucao(char opcode, Registrador rs, Registrador rt, Registrador 
     		
     	//
   	    case BEQ:
+            printf("\nExecução --> BEQ") ;
     		if (rs.valor == rt.valor) 
     		{
       			//pc = &immediate ; // Salta para o endereço imediato
@@ -346,6 +433,7 @@ void executar_Execucao(char opcode, Registrador rs, Registrador rt, Registrador 
     		
     	//
   	    case BNE:
+            printf("\nExecução --> BNE") ;
     		if (rs.valor != rt.valor) 
     		{
       			//pc = &immediate ; // Salta para o endereço imediato
@@ -355,15 +443,15 @@ void executar_Execucao(char opcode, Registrador rs, Registrador rt, Registrador 
   	
   	    // 
   	    case JUMP:
+            printf("JUMP %d\n", immediate) ;
     		//pc = &immediate ; // Salto incondicional para o endereço imediato
-    		printf("JUMP %d\n", immediate) ;
     		break ;
     		
     	// Carregamento de memória
   	    case LW:
     		if (rs.valor >= 0 && rs.valor < 32) 
     		{
-      			// barramento_leitura = rs.valor ; // Conecta o barramento de leitura ao registrador rs
+      			//barramento_leitura = rs.valor ; // Conecta o barramento de leitura ao registrador rs
       			//int endereco_memoria = rs.valor + immediate.valor ;
       			//resultado = memoria.dados[endereco_memoria] ;
       			//barramento_leitura = -1; // Desconecta o barramento de leitura
@@ -372,8 +460,8 @@ void executar_Execucao(char opcode, Registrador rs, Registrador rt, Registrador 
     		}
     		break;
   	
-  	// Armazenamento na memória
-  	case SW:
+  	    // Armazenamento na memória
+  	    case SW:
     		if (rs.valor >= 0 && rs.valor < 32) 
     		{
       			//barramento_leitura = rd.valor ; // Conecta o barramento de leitura ao registrador rd
@@ -385,15 +473,15 @@ void executar_Execucao(char opcode, Registrador rs, Registrador rt, Registrador 
     		}
     		break;
   	
-  	// Saída
-  	case EXIT:
+  	    // Saída
+  	    case EXIT:
     		printf("Programa encerrado.\n") ;
     		pc = -1 ; // Termina o programa
     		break ;
   		
-  	// Caso Base	
-  	default:
-    		printf("Opcode desconhecido\n") ;
+  	    // Caso Base	
+  	    default:
+    		printf("\nOpcode desconhecido\n") ;
     		break ;
     }
 }
@@ -424,6 +512,7 @@ void executar_Escrita_Resultados(char opcode, int destination)
 
 
 // ===================================================== SCOREBOARD ========================================================
+
 
 // Função para inicializar o scoreboard
 void inicializar_Scoreboard() 
@@ -482,55 +571,6 @@ int obter_Valor_Registrador(int reg)
 
 // =========================================================================================================================
 
-
-
-
-
-
-// ===================================================== MEMÓRIA =====================================================
-
-void imprimir_memoria() 
-{
-  printf("Conteúdo da memória:\n");
-  for (int i = 0; i < 1024; i++) 
-  {
-    printf("memoria[%d] = %d\n", i, memoria.dados[i]);
-  }
-}
-
-// Função para ler dados da memória
-int ler_memoria(int endereco) 
-{
-  if (endereco >= 0 && endereco < 1024) 
-  {
-    return memoria.dados[endereco]; // Corrigido para usar memoria.dados
-  } 
-  else 
-  {
-    // Tratar erro de acesso à memória fora dos limites
-    printf("Erro: Acesso à memória fora dos limites.\n");
-
-    return 0;
-  }
-}
-
-// Função para escrever dados na memória
-void escrever_memoria(int endereco, int dado) 
-{
-  if (endereco >= 0 && endereco < 1024) 
-  {
-    memoria.dados[endereco] = dado ; // Corrigido para usar memoria.dados
-  } 
-  else 
-  {
-    // Tratar erro de acesso à memória fora dos limites
-    printf("Erro: Acesso à memória fora dos limites.\n") ;
-  }
-}
-
-// =========================================================================================================================
-
-
 // Declaração de barramentos
 int barramento_leitura = -1; // Inicialmente, nenhum registrador está usando o barramento de leitura
 int barramento_escrita = -1; // Inicialmente, nenhum registrador está usando o barramento de escrita
@@ -540,8 +580,6 @@ int ler_barramento()
 {
     if (barramento_leitura != -1) 
     { 
-  	    printf("Barramento de leitura conectado a %s\n",nomes_registradores[barramento_leitura]);
-    	// return registradores[barramento_leitura];
     }
   
     return 0; // Se não estiver conectado, retorna 0
@@ -552,21 +590,15 @@ void escrever_barramento(int valor)
 {
   if (barramento_escrita != -1) 
   {
-    	printf("Barramento de escrita conectado a %s\n",nomes_registradores[barramento_escrita]);
-  	registradores[barramento_escrita].valor = valor;
   }
 }
-
-
-
-
 
 
 int main() 
 {
 	Registrador rd, rs, rt, imm ;
 
-  	// Inicialização do pipeline e scoreboard
+  	// Inicialização do pipeline
     for (int i = 0; i < 5; i++) 
     {
         pipeline[i].opcode = ' ' ;
@@ -576,20 +608,29 @@ int main()
         pipeline[i].immediate = -1 ;
     }
 
-  	for (int i = 0; i < 1024; i++) 
+  	for (int i = 0; i < 128; i++) 
  	{
-    		memoria.dados[i] = 0 ;
+    	memoria.dados[i] = 0 ;
   	}
+    
+    imprimir_memoria(memoria) ; 
 
-  	// Exemplo de instrução (opcode r1, r2)
-  	enum OpCode opcode = SUBI ;
-	rd.valor = 0 ;
-	rs.valor = 0 ;
-	rt.valor = 0 ;
-	imm.valor = 10 ;
+  	// Exemplo de instrução
+  	Opcode opcode = ADD ;
+	rd.valor = 1 ;
+	rs.valor = 2 ;
+	rt.valor = 3 ;
+	imm.valor = 5 ;
 
   	// Executa a instrução
   	executar_Execucao(opcode, rd, rs, rt, imm) ;
 
+    imprimir_memoria(memoria) ;
+
   	return 0;
 }
+
+// Ler ASSEMBLY
+// Guardar informações
+// Busca Informações 
+// 
