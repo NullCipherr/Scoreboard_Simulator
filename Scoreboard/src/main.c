@@ -1,3 +1,4 @@
+#include "barramento.h"
 #include "cpu.h"
 #include "defs.h"
 #include "hashtables.h"
@@ -24,7 +25,6 @@ main(int argc, char *argv[]) {
   definir_programa(&programa, argc, argv);
 
   char     *memoria   = (char *) malloc(programa.tamanho_memoria);
-  uint32_t  PC        = 100; // 100 primeiros bytes da memória reservados
   CPU_Specs cpu_specs = { 0 };
 
   FILE *arq = fopen(programa.nome_programa, "r");
@@ -47,10 +47,9 @@ main(int argc, char *argv[]) {
   leitor_ler_arquivo(buffer, memoria, &cpu_specs);
   printf("%d\n", *((int *) &memoria[00]));
 
-  for (size_t i = 100; i < programa.tamanho_memoria; i += 4) {
-    uint32_t instrucao = *((uint32_t *) &memoria[i]);
-    decodificar(instrucao);
-  }
+  scoreboard_inicializar(&cpu_specs);
+  barramento_inicializar(memoria);
+  rodar_programa(programa.nome_saida, &cpu_specs);
 
   return 0;
 }

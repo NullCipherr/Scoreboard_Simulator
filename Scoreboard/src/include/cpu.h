@@ -69,3 +69,6 @@ struct _banco_registradores {
 struct _scoreboard {
   int a;
 };
+
+void scoreboard_inicializar(CPU_Specs *cpu_specs);
+void rodar_programa(char *nome_saida, CPU_Specs *cpu_specs);

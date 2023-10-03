@@ -1,0 +1,9 @@
+Andamento do Trabalho de ARQ II - Simulador de Scoreboard
+
+- Leitor
+- 5 Estágios
+	- Buscar -- OKAY
+	- Emitir -- OKAY
+	- Leitura de Operandos -- OKAY
+	- Execução -- 
+	- Escrita dos resultados --  
