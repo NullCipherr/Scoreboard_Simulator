@@ -1,0 +1,22 @@
+.text
+    # Inicialização
+    li $v0, 1         # Inicializa $v0 com 1 (resultado)
+    li $t1, 1         # Inicializa $t1 com 1 (contador)
+    
+    # Leia o número para o qual o fatorial será calculado (em $a0)
+    lw $t0, 0($a0)    # Carrega o valor de $a0 em $t0
+    
+    # Loop para calcular o fatorial
+    Loop:
+        beq $t1, $t0, Done    # Se o contador for igual ao número, saia do loop
+        mul $v0, $v0, $t1     # Multiplica o resultado pelo contador
+        addi $t1, $t1, 1      # Incrementa o contador
+        j Loop                # Volta para o início do loop
+    
+    # Saída
+    Done:
+        # O resultado do fatorial está em $v0
+        # Coloque seu código de saída aqui
+
+    # Fim do programa
+    nop

@@ -1,0 +1,18 @@
+.data
+    result: .word 0
+
+.text
+    # Escrevendo o valor 5 em $t0
+    li $t0, 5
+
+    # Realizando uma operação com $t0 (por exemplo, multiplicação)
+    mul $t1, $t0, $t0
+
+    # Carregando o valor de $t1 em $t2
+    move $t2, $t1
+
+    # Escrevendo o resultado em result
+    sw $t2, result
+
+    # Fim do programa
+    nop

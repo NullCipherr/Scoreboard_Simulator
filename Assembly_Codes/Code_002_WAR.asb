@@ -1,0 +1,16 @@
+.data
+    array: .word 1, 2, 3, 4
+    result: .word 0
+
+.text
+    # Carregando o valor de array[0] em $t0
+    lw $t0, array
+
+    # Realizando alguma operação com $t0
+    addi $t1, $t0, 5
+
+    # Escrevendo o resultado em result
+    sw $t1, result
+
+    # Fim do programa
+    nop
