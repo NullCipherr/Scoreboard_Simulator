@@ -1,32 +1,48 @@
+/*
+UF:
+  add: 5
+  mul: 5
+  inteiro: 5
+INST:
+  add: 2
+  addi: 2
+  sub: 2
+  subi: 2
+  mul: 10
+  div: 40
+  and: 1
+  or: 1
+  not: 1
+  blt: 2
+  bgt: 2
+  beq: 2
+  lw: 2
+  sw: 2
+*/
+
 .data
-    result1: .word 0
-    result2: .word 0
-    result3: .word 0
+    r1: .word 10
+    r2: .word 20
 
 .text
-    # Escrevendo o valor 5 em $t0
-    li $t0, 5
+    # Carrega o valor da variável var1 no registrador $t0
+    lw $t0, r1
 
-    # Realizando uma operação com $t0 (por exemplo, multiplicação)
-    mul $t1, $t0, $t0
+    # Realiza uma operação que escreve no registrador $t1
+    addi $t1, $t0, 5
 
-    # Escrevendo o valor 10 em $t0
-    li $t0, 10
+    # Carrega o valor da variável var2 no registrador $t2
+    lw $t2, r2
 
-    # Carregando o valor de $t1 em $t2
-    move $t2, $t1
+    # Faz uma operação usando $t2 e $t1, armazenando o resultado em $t3
+    add $t3, $t2, $t1
 
-    # Escrevendo o resultado da operação em result1
-    sw $t2, result1
+    # Realiza uma operação que escreve no registrador $t2
+    sub $t2, $t2, $t0
 
-    # Carregando o valor de $t0 em $t3
-    lw $t3, result1
-
-    # Realizando outra operação com $t3
-    add $t4, $t3, $t0
-
-    # Escrevendo o resultado da segunda operação em result2
-    sw $t4, result2
+    # Armazena o valor do registrador $t3 na variável var1
+    sw $t3, r1
 
     # Fim do programa
-    nop
+    exit
+

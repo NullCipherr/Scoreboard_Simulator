@@ -1,36 +1,47 @@
-*
+/*
 UF:
-	add: 3
-	mul: 4
-	inteiro: 3
+  add: 5
+  mul: 5
+  inteiro: 5
 INST:
-	add: 5
-	mul: 12
-	#.....
-*
+  add: 2
+  addi: 2
+  sub: 2
+  subi: 2
+  mul: 10
+  div: 40
+  and: 1
+  or: 1
+  not: 1
+  blt: 2
+  bgt: 2
+  beq: 2
+  lw: 2
+  sw: 2
+*/
 
 .data
-	var1: .word 10
-  	var2: .word 20
+    r1: .dd 10
+    r2: .dd 20
 .text
-    # Carrega o valor da variável var1 no registrador $t0
-    lw $t0, var1
+    # Carrega o valor da variável r1 no registrador $t0
+    lw $t0, r1
   
-    # Carrega o valor da variável var2 no registrador $t1
-    lw $t1, var2
+    # Carrega o valor da variável r2 no registrador $t1
+    lw $t1, r2
 
     # Soma os valores dos registradores $t0 e $t1 e armazena o resultado no registrador $t2
     add $t2, $t0, $t1
   
-    # Armazena o valor do registrador $t2 na variável var1
-    sw $t2, var1
+    # Armazena o valor do registrador $t2 na variável r1
+    sw $t2, r1
 
-    # Realiza uma operação que escreve no mesmo registrador $t1
-    # Note que essa instrução vai escrever no mesmo registrador $t1 que foi usado anteriormente
-    mul $t1, $t0, $t2
+    # Realiza uma operação de multiplicação e armazena o resultado em $t3 (usado como temporário)
+    mul $t3, $t0, $t2
 
-    # Armazena o valor do registrador $t2 na variável var2
-    sw $t2, var2
+    # Armazena o valor do registrador $t2 na variável r2
+    sw $t2, r2
 
-    # Retorno do programa
-    jr $ra
+    # Fim do programa
+    exit
+

@@ -1,16 +1,38 @@
+/*
+UF:
+  add: 5
+  mul: 5
+  inteiro: 5
+INST:
+  add: 2
+  addi: 2
+  sub: 2
+  subi: 2
+  mul: 10
+  div: 40
+  and: 1
+  or: 1
+  not: 1
+  blt: 2
+  bgt: 2
+  beq: 2
+  lw: 2
+  sw: 2
+*/
+
 .data
-    array: .word 1, 2, 3, 4
-    result: .word 0
-
+    r1: .dd 10
+    r2: .dd 20
 .text
-    # Carregando o valor de array[0] em $t0
-    lw $t0, array
+    # Carrega o valor da variável var1 no registrador $t0
+    lw $t0, r1
 
-    # Realizando alguma operação com $t0
+    # Realiza uma operação que escreve no registrador $t1
     addi $t1, $t0, 5
 
-    # Escrevendo o resultado em result
-    sw $t1, result
+    # Armazena o valor do registrador $t1 na variável var2
+    sw $t1, r2
 
     # Fim do programa
-    nop
+    exit
+
