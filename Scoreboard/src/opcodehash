@@ -1,0 +1,33 @@
+%{
+#include "memoria.h"
+%}
+%define slot-name operacao
+%switch=1
+%compare-strncmp
+%includes
+%define lookup-function-name encontra_operacao
+%define hash-function-name hash_operacao
+%struct-type
+%define length-table-name num_operacoes
+%define word-array-name operacoes
+%define constants-prefix OP_
+%enum
+struct OpCodeMap { char *operacao; uint8_t opcode; tipo t; };
+%%
+add, 0x00, R
+addi, 0x01, I
+sub, 0x02, R
+subi, 0x03, I
+mul, 0x04, R
+div, 0x05, R
+and, 0x06, R
+or, 0x07, R
+not, 0x08, R
+blt, 0x09, I
+bgt, 0x0A, I
+beq, 0x0B, I
+bne, 0x0C, I
+j, 0x0D, J
+lw, 0x0E, I
+sw, 0x0F, I
+exit, 0x10, J
