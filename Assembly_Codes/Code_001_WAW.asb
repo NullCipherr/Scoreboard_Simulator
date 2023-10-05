@@ -21,27 +21,24 @@ INST:
 */
 
 .data
-    r1: .dd 10
-    r2: .dd 20
-.text
-    # Carrega o valor da variável r1 no registrador $t0
-    lw $t0, r1
+  10           # Define um valor constante 10
+  20           # Define um valor constante 20
+  30           # Define um valor constante 30
+  40           # Define um valor constante 40
   
-    # Carrega o valor da variável r2 no registrador $t1
-    lw $t1, r2
+.text           
 
-    # Soma os valores dos registradores $t0 e $t1 e armazena o resultado no registrador $t2
-    add $t2, $t0, $t1
-  
-    # Armazena o valor do registrador $t2 na variável r1
-    sw $t2, r1
+# Instrução 1
+add r1, r2, r3    # Adiciona o conteúdo de r2 e r3 e armazena o resultado em r1
 
-    # Realiza uma operação de multiplicação e armazena o resultado em $t3 (usado como temporário)
-    mul $t3, $t0, $t2
+# Instrução 2 com dependência WAW em r1
+sub r1, r4, r5    # Subtrai o conteúdo de r4 de r5 e armazena o resultado em r1
 
-    # Armazena o valor do registrador $t2 na variável r2
-    sw $t2, r2
+# Instrução 3 com dependência WAW em r1
+mul r1, r6, r7    # Multiplica o conteúdo de r6 e r7 e armazena o resultado em r1
 
-    # Fim do programa
-    exit
+# Instrução 4 com dependência WAW em r1
+addi r1, r8, 100  # Adiciona o valor imediato 100 a r8 e armazena o resultado em r1
+
+
 

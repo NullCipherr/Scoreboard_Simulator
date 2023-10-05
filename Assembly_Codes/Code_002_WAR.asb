@@ -21,18 +21,21 @@ INST:
 */
 
 .data
-    r1: .dd 10
-    r2: .dd 20
-.text
-    # Carrega o valor da variável var1 no registrador $t0
-    lw $t0, r1
+  10           # Define um valor constante 10
+  20           # Define um valor constante 20
 
-    # Realiza uma operação que escreve no registrador $t1
-    addi $t1, $t0, 5
+.text          
 
-    # Armazena o valor do registrador $t1 na variável var2
-    sw $t1, r2
+    # Instrução 1
+    add r2, r1, r3  # Adiciona o conteúdo de r1 e r3 e armazena o resultado em r2
 
-    # Fim do programa
-    exit
+    # Instrução 2 com dependência WAR em r1
+    sub r1, r5, r4  # Subtrai o conteúdo de r5 de r4 e armazena o resultado em r1
+
+    # Instrução 3 com dependência WAR em r1
+    mul r6, r7, r1  # Multiplica o conteúdo de r7 por r1 e armazena o resultado em r6
+
+    # Instrução 4 com dependência WAR em r1
+    addi r8, r1, 100  # Adiciona o valor imediato 100 a r1 e armazena o resultado em r8
+
 
